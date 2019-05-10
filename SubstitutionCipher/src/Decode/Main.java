@@ -52,6 +52,8 @@ public class Main {
             String cipheredText = scanner.nextLine();
             System.out.println("Ciphered Text : " + cipheredText);
 
+            String backupCipheredText = cipheredText.substring(0);
+
 
 
             String freq = scanner.nextLine();
@@ -132,37 +134,38 @@ public class Main {
 //================================================================================================
 
             boolean []wordMatched = new boolean[words.length];
+            int numWordMatched = 0;
             for (int i = 0; i < words.length; i++) {
                 wordMatched[i] = false;
             }
 
             for (int itr = 0; itr < MAX_ITR; itr++) {
 
-                for (int i = 0; i < words.length ; i++) {
-                    if(wordMatched[i]){
+                for (int wordIdx = 0; wordIdx < words.length ; wordIdx++) {
+                    if(wordMatched[wordIdx]){
                         continue;
                     }
 
-                    String word = words[i];
+                    String word = words[wordIdx];
 
                     char matchingChar = 0;
                     int matchingIdx = -1;
 
-                    for (int j = 0; j < word.length(); j++) {
-                        if(textToCipherFound[word.charAt(j)-'a']){
-                            matchingChar = word.charAt(j);
-                            matchingIdx = j;
+                    for (int i = 0; i < word.length(); i++) {
+                        if(textToCipherFound[word.charAt(i)-'a']){
+                            matchingChar = word.charAt(i);
+                            matchingIdx = i;
                             break;
                         }
                     }
 
-                    for (int j = 0; j < cipheredText.length(); j++) {
-                        if(cipheredText.charAt(j)==matchingChar){
-                            int numMathcedChar = 1;
-                            boolean mismatch = false;
+                    for (int i = 0; i < cipheredText.length(); i++) {
+                        int numMathcedChar = 1;
+                        boolean mismatch = false;
 
+                        if(cipheredText.charAt(i)==matchingChar){
                             for (int k = 1; matchingIdx+k < word.length() && i+k < cipheredText.length(); k++) {
-                                if( !textToCipherFound[word.charAt(matchingIdx+k)-'a']){
+                                if( !textToCipherFound[word.charAt(matchingIdx+k)-'a'] && cipheredText.charAt(i+k)>='A' && cipheredText.charAt(i+k)<='Z'){
                                     continue;
                                 }
                                 else if(cipheredText.charAt(i+k)!= word.charAt(matchingIdx+k)){
@@ -172,12 +175,47 @@ public class Main {
                                 else{
                                     numMathcedChar++;
                                 }
+                            }
+                        }
+                        if(mismatch  || numMathcedChar < THR){
+                            continue;
+                        }
 
+                        ///updating map
+                        wordMatched[wordIdx] = true;
+                        numWordMatched++;
+
+                        for (int j = 0; j < word.length(); j++) {
+                            int ctIdx = i-matchingIdx+j;
+
+                            if(word.charAt(j) == cipheredText.charAt(ctIdx)){
+                                continue;
+                            }
+                            else if(cipheredText.charAt(ctIdx)>='a' && cipheredText.charAt(ctIdx)<='z'){
+                                System.out.println("ERROR!!!!! Found mismatch!!!!!");
+                                return;
                             }
 
+                            textToCipher[word.charAt(j)-'a'] = cipheredText.charAt(ctIdx);
+                            textToCipherFound[word.charAt(j)-'a'] = true;
+
+                            cipherToText[cipheredText.charAt(ctIdx)-'A'] = word.charAt(j);
+                            cipherToTextFound[cipheredText.charAt(ctIdx)-'A'] = true;
+
+                            foundLetters++;
+
+                            cipheredText = cipheredText.replace(cipheredText.charAt(ctIdx), word.charAt(j));
 
                         }
 
+                        System.out.println("Found word " + wordIdx + " at index " + (i-matchingIdx) + " : " + word);
+                        System.out.println("Changed text: " + cipheredText);
+                        System.out.println("check3 : " + checkValidity());
+
+                        break;
+
+
+
                     }
 
 
@@ -186,20 +224,28 @@ public class Main {
 
                 }
 
-                int numUnmatched = 0;
-                for (int i = 0; i < wordMatched.length; i++) {
-                    if(!wordMatched[i]){
-                        numUnmatched++;
-                    }
-                }
-                if(numUnmatched==1){
+                if(words.length-numWordMatched==1){
                     itr = MAX_ITR-2;
                 }
-                else if(numUnmatched<1){
+                else if(words.length-numWordMatched<1){
                     break;
                 }
 
             }
+
+
+//================================================================================================
+//  RESULTS
+//================================================================================================
+
+            System.out.println();
+            System.out.println();
+            System.out.println();
+
+            System.out.println("===========================RESULT===========================");
+
+            System.out.println("Cipher Text  : " + backupCipheredText);
+            System.out.println("Decoded Text : " + cipheredText);
 
 
 
@@ -210,8 +256,6 @@ public class Main {
         }catch (Exception e){
             e.printStackTrace();
         }
-
-
 
 
     }
