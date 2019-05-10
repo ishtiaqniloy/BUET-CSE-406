@@ -10,21 +10,20 @@ public class Main {
     public static final int THR = 4;
     public static final int MAX_ITR = 10;
 
+    static char []textToCipher = new char[26];             ///map from normal text character to cipher text character
+    static boolean []textToCipherFound = new boolean[26];
+
+    static char []cipherToText = new char[26];             ///map from cipher text character to normal text character
+    static boolean []cipherToTextFound = new boolean[26];
+
+    static int foundLetters = 0;
+
+
     public static void main(String []args) throws FileNotFoundException {
-        System.out.println("Hello World");
-
-
 //================================================================================================
 //  Initialization
 //================================================================================================
-        char []textToCipher = new char[26];             ///map from normal text character to cipher text character
-        boolean []textToCipherFound = new boolean[26];
-
-        char []cipherToText = new char[26];             ///map from cipher text character to normal text character
-        boolean []cipherToTextFound = new boolean[26];
-
         int []cipherCharCount = new int[26];
-        int foundLetters = 0;
 
         for (int i = 0; i < 26; i++) {
             textToCipherFound[i] = false;
@@ -32,8 +31,9 @@ public class Main {
             cipherCharCount[i] = 0;
         }
 
-        try{
+        System.out.println("Check1 : " + checkValidity());
 
+        try{
 
 //================================================================================================
 //  Input
@@ -123,49 +123,85 @@ public class Main {
 
             System.out.println(cipheredText);
 
+            System.out.println("Check2 : " + checkValidity());
 
-            for (int i = 0; i < MAX_ITR || i < 2*words.length ; i++) {  //condition?
-                String word = words[i];
 
-                char matchingChar = 0;
-                int matchingIdx = -1;
 
-                for (int j = 0; j < word.length(); j++) {
-                    if(textToCipherFound[word.charAt(j)-'a']){
-                        matchingChar = word.charAt(j);
-                        matchingIdx = j;
-                        break;
+//================================================================================================
+//  Using available words to find few mappings
+//================================================================================================
+
+            boolean []wordMatched = new boolean[words.length];
+            for (int i = 0; i < words.length; i++) {
+                wordMatched[i] = false;
+            }
+
+            for (int itr = 0; itr < MAX_ITR; itr++) {
+
+                for (int i = 0; i < words.length ; i++) {
+                    if(wordMatched[i]){
+                        continue;
                     }
-                }
 
-                for (int j = 0; j < cipheredText.length(); j++) {
-                    if(cipheredText.charAt(j)==matchingChar){
-                        int mathcedChar = 1;
-                        boolean matched = true;
-                        for (int k = 1; matchingIdx+k < word.length() && i+k < cipheredText.length(); k++) {
-                             if(textToCipherFound[word.charAt(matchingIdx+k)] == false){
-                                 continue;
-                             }
+                    String word = words[i];
 
-                             if(cipheredText.charAt(i+k)!= word.charAt(matchingIdx+k)){
-                                 matched = false;
-                                 break;
-                             }
+                    char matchingChar = 0;
+                    int matchingIdx = -1;
 
-                             matchingChar++;
+                    for (int j = 0; j < word.length(); j++) {
+                        if(textToCipherFound[word.charAt(j)-'a']){
+                            matchingChar = word.charAt(j);
+                            matchingIdx = j;
+                            break;
+                        }
+                    }
+
+                    for (int j = 0; j < cipheredText.length(); j++) {
+                        if(cipheredText.charAt(j)==matchingChar){
+                            int numMathcedChar = 1;
+                            boolean mismatch = false;
+
+                            for (int k = 1; matchingIdx+k < word.length() && i+k < cipheredText.length(); k++) {
+                                if( !textToCipherFound[word.charAt(matchingIdx+k)-'a']){
+                                    continue;
+                                }
+                                else if(cipheredText.charAt(i+k)!= word.charAt(matchingIdx+k)){
+                                    mismatch = true;
+                                    break;
+                                }
+                                else{
+                                    numMathcedChar++;
+                                }
+
+                            }
+
 
                         }
 
-
                     }
+
+
+
+
 
                 }
 
-
-
-
+                int numUnmatched = 0;
+                for (int i = 0; i < wordMatched.length; i++) {
+                    if(!wordMatched[i]){
+                        numUnmatched++;
+                    }
+                }
+                if(numUnmatched==1){
+                    itr = MAX_ITR-2;
+                }
+                else if(numUnmatched<1){
+                    break;
+                }
 
             }
+
+
 
 
 
@@ -177,6 +213,43 @@ public class Main {
 
 
 
+
+    }
+
+    static boolean checkValidity(){
+        int num1 = 0, num2 = 0;
+
+        for (int i = 0; i < 26; i++) {
+            if(textToCipherFound[i]){
+                if( cipherToText[textToCipher[i]-'A'] != i ){
+                    System.out.println("MISMATCH 1");
+                    return false;
+                }
+                else if(!cipherToTextFound[textToCipher[i]-'A']){
+                    System.out.println("MISMATCH 2");
+                    return false;
+                }
+                num1++;
+            }
+            if(cipherToTextFound[i]){
+                if( textToCipher[cipherToText[i]-'a'] != i  ){
+                    System.out.println("MISMATCH 3");
+                    return false;
+                }
+                else if( !textToCipherFound[cipherToText[i]-'a']  ){
+                    System.out.println("MISMATCH 4");
+                    return false;
+                }
+                num2++;
+            }
+        }
+
+        if(num1 != foundLetters || num2 != foundLetters){
+            System.out.println("MISMATCH 5");
+            return false;
+        }
+
+        return true;
 
     }
 
