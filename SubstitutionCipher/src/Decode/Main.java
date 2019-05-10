@@ -7,6 +7,9 @@ import java.util.Scanner;
 
 public class Main {
 
+    public static final int THR = 4;
+    public static final int MAX_ITR = 10;
+
     public static void main(String []args) throws FileNotFoundException {
         System.out.println("Hello World");
 
@@ -113,8 +116,57 @@ public class Main {
 
                 System.out.println(freqLetters[i].charAt(0) + " = " + (char)(maxi+'A') );
 
+                cipheredText = cipheredText.replace( (char)(maxi+'A'), freqLetters[i].charAt(0));
+
 
             }
+
+            System.out.println(cipheredText);
+
+
+            for (int i = 0; i < MAX_ITR || i < 2*words.length ; i++) {  //condition?
+                String word = words[i];
+
+                char matchingChar = 0;
+                int matchingIdx = -1;
+
+                for (int j = 0; j < word.length(); j++) {
+                    if(textToCipherFound[word.charAt(j)-'a']){
+                        matchingChar = word.charAt(j);
+                        matchingIdx = j;
+                        break;
+                    }
+                }
+
+                for (int j = 0; j < cipheredText.length(); j++) {
+                    if(cipheredText.charAt(j)==matchingChar){
+                        int mathcedChar = 1;
+                        boolean matched = true;
+                        for (int k = 1; matchingIdx+k < word.length() && i+k < cipheredText.length(); k++) {
+                             if(textToCipherFound[word.charAt(matchingIdx+k)] == false){
+                                 continue;
+                             }
+
+                             if(cipheredText.charAt(i+k)!= word.charAt(matchingIdx+k)){
+                                 matched = false;
+                                 break;
+                             }
+
+                             matchingChar++;
+
+                        }
+
+
+                    }
+
+                }
+
+
+
+
+
+            }
+
 
 
 
