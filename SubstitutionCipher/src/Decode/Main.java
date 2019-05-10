@@ -236,117 +236,122 @@ public class Main {
 //  Using Ngrams
 //================================================================================================
 
-            boolean []ngramMatched = new boolean[ngrams.length];
-            int numNgramsMatched = 0;
-            for (int i = 0; i < ngrams.length; i++) {
-                ngramMatched[i] = false;
-            }
 
-            for (String ngram : ngrams) {
-                boolean flag = true;
-                for (int i = 0; i < ; i++) {
-                    
-                }
-                
-            }
-            
-
-            for (int itr = 0; itr < MAX_ITR; itr++) {
-
-                for (int ngramIdx = 0; ngramIdx < ngrams.length ; ngramIdx++) {
-                    if(ngramMatched[ngramIdx]){
-                        continue;
-                    }
-
-                    String ngram = ngrams[ngramIdx];
-
-                    char matchingChar = 0;
-                    int matchingIdx = -1;
-
-                    ArrayList <Integer> ngramIndexes = new ArrayList<Integer>();
-                    ArrayList <ArrayList<Integer>> characters = new ArrayList <ArrayList<Integer>>();
-                    for (int i = 0; i < ngram.length(); i++) {
-                        characters.add(new ArrayList<Integer>());
-                    }
-
-                    for (int i = 0; i < ngram.length(); i++) {
-                        if(matchingIdx==-1 && textToCipherFound[ngram.charAt(i)-'a']){
-                            matchingChar = ngram.charAt(i);
-                            matchingIdx = i;
-                        }
-                        else{
-
-                        }
-                    }
-
-                    for (int i = 0; i < cipheredText.length(); i++) {
-                        int numMatchedChar = 1;
-                        boolean mismatch = false;
-
-                        if(cipheredText.charAt(i)==matchingChar){
-                            for (int k = 1; matchingIdx+k < word.length() && i+k < cipheredText.length(); k++) {
-                                if( !textToCipherFound[word.charAt(matchingIdx+k)-'a'] && cipheredText.charAt(i+k)>='A' && cipheredText.charAt(i+k)<='Z'){
-                                    continue;
-                                }
-                                else if(cipheredText.charAt(i+k)!= word.charAt(matchingIdx+k)){
-                                    mismatch = true;
-                                    break;
-                                }
-                                else{
-                                    numMatchedChar++;
-                                }
-                            }
-                        }
-                        if(mismatch  || numMathcedChar < THR){
-                            continue;
-                        }
-
-                        ///updating map
-                        wordMatched[wordIdx] = true;
-                        numWordMatched++;
-
-                        for (int j = 0; j < word.length(); j++) {
-                            int ctIdx = i-matchingIdx+j;
-
-                            if(word.charAt(j) == cipheredText.charAt(ctIdx)){
-                                continue;
-                            }
-                            else if(cipheredText.charAt(ctIdx)>='a' && cipheredText.charAt(ctIdx)<='z'){
-                                System.out.println("ERROR!!!!! Found mismatch!!!!!");
-                                return;
-                            }
-
-                            textToCipher[word.charAt(j)-'a'] = cipheredText.charAt(ctIdx);
-                            textToCipherFound[word.charAt(j)-'a'] = true;
-
-                            cipherToText[cipheredText.charAt(ctIdx)-'A'] = word.charAt(j);
-                            cipherToTextFound[cipheredText.charAt(ctIdx)-'A'] = true;
-
-                            foundLetters++;
-
-                            cipheredText = cipheredText.replace(cipheredText.charAt(ctIdx), word.charAt(j));
-
-                        }
-
-                        System.out.println("Found word " + wordIdx + " at index " + (i-matchingIdx) + " : " + word);
-                        System.out.println("Changed text: " + cipheredText);
-                        System.out.println("check3 : " + checkValidity());
-
-                        break;
-
-                    }
-
-                }
-
-                if(words.length-numWordMatched==1){
-                    itr = MAX_ITR-2;
-                }
-                else if(words.length-numWordMatched<1){
-                    break;
-                }
-
-            }
-
+//            boolean []ngramMatched = new boolean[ngrams.length];
+//            int numNgramsMatched = 0;
+//
+//            for (int i = 0; i < ngrams.length; i++) {
+//                String ngram = ngrams[i];
+//                boolean flag = true;
+//                for (int j = 0; j < ngram.length(); j++) {
+//                    if( !textToCipherFound[ngram.charAt(j)]){
+//                        flag = false;
+//                        break;
+//                    }
+//                }
+//                ngramMatched[i] = flag;
+//
+//                if(flag){
+//                    numNgramsMatched++;
+//                }
+//
+//            }
+//
+//
+//            for (int itr = 0; itr < MAX_ITR; itr++) {
+//
+//                for (int ngramIdx = 0; ngramIdx < ngrams.length ; ngramIdx++) {
+//                    if(ngramMatched[ngramIdx]){
+//                        continue;
+//                    }
+//
+//                    String ngram = ngrams[ngramIdx];
+//
+//                    char matchingChar = 0;
+//                    int matchingIdx = -1;
+//
+//                    ArrayList <Integer> ngramIndexes = new ArrayList<Integer>();
+//
+//
+//
+//                    for (int i = 0; i < ngram.length(); i++) {
+//                        if(matchingIdx==-1 && textToCipherFound[ngram.charAt(i)-'a']){
+//                            matchingChar = ngram.charAt(i);
+//                            matchingIdx = i;
+//                        }
+//                        else{
+//
+//                        }
+//                    }
+//
+//                    for (int i = 0; i < cipheredText.length(); i++) {
+//                        int numMatchedChar = 1;
+//                        boolean mismatch = false;
+//
+//                        if(cipheredText.charAt(i)==matchingChar){
+//                            for (int k = 1; matchingIdx+k < word.length() && i+k < cipheredText.length(); k++) {
+//                                if( !textToCipherFound[word.charAt(matchingIdx+k)-'a'] && cipheredText.charAt(i+k)>='A' && cipheredText.charAt(i+k)<='Z'){
+//                                    continue;
+//                                }
+//                                else if(cipheredText.charAt(i+k)!= word.charAt(matchingIdx+k)){
+//                                    mismatch = true;
+//                                    break;
+//                                }
+//                                else{
+//                                    numMatchedChar++;
+//                                }
+//                            }
+//                        }
+//                        if(mismatch  || numMathcedChar < THR){
+//                            continue;
+//                        }
+//
+//                        ///updating map
+//                        ngramMatched[ngramIdx] = true;
+//                        numWordMatched++;
+//
+//                        for (int j = 0; j < ngram.length(); j++) {
+//                            int ctIdx = i-matchingIdx+j;
+//
+//                            if(ngram.charAt(j) == cipheredText.charAt(ctIdx)){
+//                                continue;
+//                            }
+//                            else if(cipheredText.charAt(ctIdx)>='a' && cipheredText.charAt(ctIdx)<='z'){
+//                                System.out.println("ERROR!!!!! Found mismatch!!!!!");
+//                                return;
+//                            }
+//
+//                            textToCipher[ngram.charAt(j)-'a'] = cipheredText.charAt(ctIdx);
+//                            textToCipherFound[ngram.charAt(j)-'a'] = true;
+//
+//                            cipherToText[cipheredText.charAt(ctIdx)-'A'] = ngram.charAt(j);
+//                            cipherToTextFound[cipheredText.charAt(ctIdx)-'A'] = true;
+//
+//                            foundLetters++;
+//
+//                            cipheredText = cipheredText.replace(cipheredText.charAt(ctIdx), ngram.charAt(j));
+//
+//                        }
+//
+//                        System.out.println("Found ngram at index " + (i-matchingIdx) + " : " + ngram);
+//                        System.out.println("Changed text: " + cipheredText);
+//                        System.out.println("check3 : " + checkValidity());
+//
+//                        break;
+//
+//                    }
+//
+//                }
+//
+//                if(ngrams.length-numNgramsMatched==1){
+//                    itr = MAX_ITR-2;
+//                }
+//                else if(ngrams.length-numNgramsMatched<1){
+//                    break;
+//                }
+//
+//            }
+//
 
 
 

@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8628dadc-13f8-4fbe-98a2-077b860df9a1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/input.txt" beforeDir="false" afterPath="$PROJECT_DIR$/input.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Decode/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Decode/Main.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -18,21 +18,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Decode/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="246" column="36" selection-start-line="246" selection-start-column="36" selection-end-line="246" selection-end-column="36" />
+            <state relative-caret-position="43">
+              <caret line="238" selection-start-line="238" selection-end-line="238" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#9404#9413#0" expanded="true" />
-                <element signature="e#9495#9515#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/input.txt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="102">
@@ -56,8 +54,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/input.txt" />
         <option value="$PROJECT_DIR$/src/Decode/Main.java" />
+        <option value="$PROJECT_DIR$/input.txt" />
       </list>
     </option>
   </component>
@@ -146,7 +144,7 @@
       <updated>1557407647973</updated>
       <workItem from="1557407659542" duration="1262000" />
       <workItem from="1557462799594" duration="17140000" />
-      <workItem from="1557487813544" duration="1773000" />
+      <workItem from="1557487813544" duration="5310000" />
     </task>
     <task id="LOCAL-00001" summary="most used letters mapped">
       <created>1557468443586</created>
@@ -190,11 +188,18 @@
       <option name="project" value="LOCAL" />
       <updated>1557487517808</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="trying to use ngrams">
+      <created>1557489614937</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1557489614937</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="20175000" />
+    <option name="totallyTimeSpent" value="23712000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -209,7 +214,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.31914893" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.7086743" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39934534" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -241,25 +246,24 @@
     <MESSAGE value="validity function probably done" />
     <MESSAGE value="decoded" />
     <MESSAGE value="result" />
-    <option name="LAST_COMMIT_MESSAGE" value="result" />
+    <MESSAGE value="trying to use ngrams" />
+    <option name="LAST_COMMIT_MESSAGE" value="trying to use ngrams" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/Decode/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="43">
+          <caret line="238" selection-start-line="238" selection-end-line="238" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/input.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
           <caret line="6" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Decode/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="246" column="36" selection-start-line="246" selection-start-column="36" selection-end-line="246" selection-end-column="36" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#9404#9413#0" expanded="true" />
-            <element signature="e#9495#9515#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
