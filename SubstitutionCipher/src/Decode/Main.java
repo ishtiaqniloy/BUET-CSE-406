@@ -221,7 +221,7 @@ public class Main {
 
         for (int i = 0; i < 26; i++) {
             if(textToCipherFound[i]){
-                if( cipherToText[textToCipher[i]-'A'] != i ){
+                if( cipherToText[textToCipher[i]-'A']-'a' != i ){
                     System.out.println("MISMATCH 1");
                     return false;
                 }
@@ -232,7 +232,7 @@ public class Main {
                 num1++;
             }
             if(cipherToTextFound[i]){
-                if( textToCipher[cipherToText[i]-'a'] != i  ){
+                if( textToCipher[cipherToText[i]-'a']-'A' != i  ){
                     System.out.println("MISMATCH 3");
                     return false;
                 }
