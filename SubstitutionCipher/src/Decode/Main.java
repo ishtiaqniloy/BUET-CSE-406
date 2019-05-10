@@ -50,6 +50,7 @@ public class Main {
             Scanner scanner = new Scanner(new FileInputStream(input));
 
             String cipheredText = scanner.nextLine();
+            scanner.nextLine();
             System.out.println("Ciphered Text : " + cipheredText);
 
             String backupCipheredText = cipheredText.substring(0);
@@ -57,6 +58,7 @@ public class Main {
 
 
             String freq = scanner.nextLine();
+            scanner.nextLine();
             freq = freq.replaceAll(",", "");
             System.out.println("Frequent Letters : " + freq);
 
@@ -242,11 +244,29 @@ public class Main {
             System.out.println();
             System.out.println();
 
-            System.out.println("===========================RESULT===========================");
+            System.out.println("===========================RESULTS===========================");
 
-            System.out.println("Cipher Text  : " + backupCipheredText);
-            System.out.println("Decoded Text : " + cipheredText);
+            System.out.println("Words Matched = " + numWordMatched);
 
+            System.out.println("Original Text : " + backupCipheredText);
+            System.out.println("Decoded Text  : " + cipheredText);
+            System.out.println("Encoded Text  : " + cipher(cipheredText));
+            System.out.println("Matched = " + backupCipheredText.equals(cipher(cipheredText)));
+            System.out.println();
+
+            System.out.println("MAPPING: ");
+            for (int i = 0; i < 26; i++) {
+                System.out.println( (char)(i+'a') + " = " + textToCipher[i]);
+            }
+            System.out.println("Number of letters found = " + foundLetters);
+
+            int numMatchedChars = 0;
+            for (int i = 0; i < cipheredText.length(); i++) {
+                if(cipheredText.charAt(i) >= 'a' && cipheredText.charAt(i) <= 'z'){
+                    numMatchedChars++;
+                }
+            }
+            System.out.println("Percentage of match = " + (100.0*numMatchedChars/cipheredText.length()) +"%" );
 
 
 
@@ -258,6 +278,20 @@ public class Main {
         }
 
 
+    }
+    
+    static String cipher(String plainText){
+        String cipherText = plainText.substring(0);
+
+        for (int i = 0; i < 26; i++) {
+            if(textToCipherFound[i]){
+                cipherText = cipherText.replace((char) (i+'a'), textToCipher[i]);
+
+            }
+        }
+        
+        
+        return cipherText;
     }
 
     static boolean checkValidity(){
