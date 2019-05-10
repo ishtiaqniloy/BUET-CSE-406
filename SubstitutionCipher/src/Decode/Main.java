@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class Main {
 
     public static final int THR = 4;
+    public static final int THR2 = 3;
     public static final int MAX_ITR = 10;
     public static final String []ngrams = {"th", "in", "er", "re", "an", "ing", "and", "ion"};
 
@@ -223,10 +224,7 @@ public class Main {
 
                 }
 
-                if(words.length-numWordMatched==1){
-                    itr = MAX_ITR-2;
-                }
-                else if(words.length-numWordMatched<1){
+                if(words.length-numWordMatched<1){
                     break;
                 }
 
@@ -343,10 +341,7 @@ public class Main {
 //
 //                }
 //
-//                if(ngrams.length-numNgramsMatched==1){
-//                    itr = MAX_ITR-2;
-//                }
-//                else if(ngrams.length-numNgramsMatched<1){
+//                if(ngrams.length-numNgramsMatched<1){
 //                    break;
 //                }
 //
@@ -354,6 +349,122 @@ public class Main {
 //
 
 
+//================================================================================================
+//  Guessing some words to find few mappings
+//================================================================================================
+            String guess;
+
+            System.out.println("Guess some words (COMMA SEPARATED): ");
+
+            Scanner sc = new Scanner(System.in);
+            guess = sc.nextLine();
+
+            guess = guess.replaceAll(",", "");
+            //System.out.println("Guess : " + guess);
+
+            String[] word2s = guess.split(" ");
+
+
+
+//================================================================================================
+//  Using guessed words to find few mappings
+//================================================================================================
+
+            boolean []word2Matched = new boolean[word2s.length];
+            int numword2Matched = 0;
+            for (int i = 0; i < word2s.length; i++) {
+                word2Matched[i] = false;
+            }
+
+            for (int itr = 0; itr < MAX_ITR; itr++) {
+                //System.out.println("ITR = " + itr);
+
+                for (int word2Idx = 0; word2Idx < word2s.length ; word2Idx++) {
+                    if(word2Matched[word2Idx]){
+                        continue;
+                    }
+
+                    String word2 = word2s[word2Idx];
+
+                    char matchingChar = 0;
+                    int matchingIdx = -1;
+
+                    for (int i = 0; i < word2.length(); i++) {
+                        if(textToCipherFound[word2.charAt(i)-'a']){
+                            matchingChar = word2.charAt(i);
+                            matchingIdx = i;
+                            break;
+                        }
+                    }
+
+                    for (int i = 0; i < cipheredText.length(); i++) {
+                        int numMatchedChar = 1;
+                        boolean mismatch = false;
+
+                        if(cipheredText.charAt(i)==matchingChar){
+                            for (int k = 1; matchingIdx+k < word2.length() && i+k < cipheredText.length(); k++) {
+                                if( !textToCipherFound[word2.charAt(matchingIdx+k)-'a'] && cipheredText.charAt(i+k)>='A' && cipheredText.charAt(i+k)<='Z'){
+                                    continue;
+                                }
+                                else if(cipheredText.charAt(i+k)!= word2.charAt(matchingIdx+k)){
+                                    mismatch = true;
+                                    break;
+                                }
+                                else{
+                                    numMatchedChar++;
+                                }
+                            }
+                        }
+                        if(mismatch  || numMatchedChar < THR2){
+                            continue;
+                        }
+
+                        ///updating map
+                        word2Matched[word2Idx] = true;
+                        numword2Matched++;
+
+                        for (int j = 0; j < word2.length(); j++) {
+                            int ctIdx = i-matchingIdx+j;
+
+                            if(word2.charAt(j) == cipheredText.charAt(ctIdx)){
+                                continue;
+                            }
+                            else if(cipheredText.charAt(ctIdx)>='a' && cipheredText.charAt(ctIdx)<='z'){
+                                System.out.println("ERROR!!!!! Found mismatch!!!!!");
+                                return;
+                            }
+
+                            textToCipher[word2.charAt(j)-'a'] = cipheredText.charAt(ctIdx);
+                            textToCipherFound[word2.charAt(j)-'a'] = true;
+
+                            cipherToText[cipheredText.charAt(ctIdx)-'A'] = word2.charAt(j);
+                            cipherToTextFound[cipheredText.charAt(ctIdx)-'A'] = true;
+
+                            foundLetters++;
+
+                            cipheredText = cipheredText.replace(cipheredText.charAt(ctIdx), word2.charAt(j));
+
+                        }
+
+                        System.out.println("Found word2 " + word2Idx + " at index " + (i-matchingIdx) + " : " + word2);
+                        System.out.println("Changed text: " + cipheredText);
+                        System.out.println("check3 : " + checkValidity());
+
+                        break;
+
+                    }
+
+                }
+
+                if(word2s.length-numword2Matched<1){
+                    break;
+                }
+
+            }            
+            
+            
+            
+            
 
 //================================================================================================
 //  RESULTS
