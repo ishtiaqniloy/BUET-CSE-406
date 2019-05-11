@@ -97,6 +97,7 @@ public class Main {
 
             System.out.println(charBlock);
             System.out.println(binaryBlock);
+            System.out.println(binaryStringToString(binaryBlock));
         }
 
 
@@ -108,7 +109,7 @@ public class Main {
     }
 
     static String charToBinaryString(char ch){
-        char []binaryString = new char[12];
+        char []binaryString = new char[8];
 
         int mask = 1;
 
@@ -121,7 +122,9 @@ public class Main {
             }
             ch = (char) (ch >> 1);
         }
-        binaryString[8] = 0;
+        //binaryString[8] = 0;
+
+        //System.out.println("Check 4 : " + binaryString.length);
 
         return new String(binaryString);
 
@@ -130,9 +133,13 @@ public class Main {
     static String stringToBinaryString(String str){
         String binaryString = "";
 
+       // System.out.println("Check 3 : " + str.length());
+
         for (int i = 0; i < str.length(); i++) {
-            binaryString = binaryString.concat(charToBinaryString(str.charAt(i)));
+            binaryString = binaryString+charToBinaryString(str.charAt(i));
         }
+
+       // System.out.println("Check 2: " + binaryString.length());
 
         return binaryString;
 
@@ -150,8 +157,23 @@ public class Main {
             //printf("%s\n", charToBinaryString(ch));
         }
 
+        //System.out.println("Check: " + ch);
+
         return ch;
 
+    }
+
+    static String binaryStringToString(String string){
+        String fullString = "";
+
+        //System.out.println(string.length()); ///wrong
+
+        for (int i = 0; i < string.length(); i+=8) {
+            fullString = fullString + binaryStringToChar(string.substring(i, i+8));
+        }
+
+
+        return fullString;
     }
 
     static long binaryStringToLong(String string){
