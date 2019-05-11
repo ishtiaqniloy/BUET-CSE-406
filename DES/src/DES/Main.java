@@ -1,5 +1,9 @@
 package DES;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -233,6 +237,23 @@ public class Main {
         System.out.println();
         System.out.println();
         System.out.println("Ciphered text : " + cipheredText);
+
+
+        try {
+            File output = new File("Output.txt");
+            output.createNewFile();
+
+            PrintWriter printWriter = new PrintWriter(new FileOutputStream(output));
+
+            printWriter.println("Original Text : " + plainText);
+            printWriter.println("Ciphered text : " + cipheredText);
+
+            printWriter.flush();
+            printWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
         //==================================================================================================
