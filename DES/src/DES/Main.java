@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+@SuppressWarnings("Duplicates")
 public class Main {
 //==================================================================================================
 //Matrices
@@ -66,6 +67,8 @@ public class Main {
 
     static int[] SHIFT = {1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1};
 
+    static ArrayList<String> itrKeys = new ArrayList<String>();
+    public static final int NUM_ITR = 16;
 
     public static void main(String []args){
 
@@ -84,6 +87,7 @@ public class Main {
         }
 
         String plainText = scanner.nextLine();
+        String backupPlainText = plainText.substring(0);
 
 //        String bin = charToBinaryString(' ');
 //        System.out.println(bin + " = " + binaryStringToChar(bin));
@@ -99,8 +103,6 @@ public class Main {
         }
 
         System.out.println("Concatenated plain text : " + plainText);
-
-        int numBlock = plainText.length()/8;        //number of blocks for plain text
         System.out.println();
 
         //==================================================================================================
@@ -111,9 +113,8 @@ public class Main {
 
         System.out.println("InitialKey    : " + keyBinary);
         System.out.println("TransposedKey : " + new String(transposedKey));
-//        System.out.println("TransposedKey2: " + new String(leftRotate(transposedKey, 2)));
 
-        ArrayList<String> itrKeys = new ArrayList<String>();
+
         //generating key for each iteration
         for (int itr = 0; itr < 16; itr++) {
             char[] lk = leftRotate(new String(transposedKey).substring(0, 28).toCharArray(), SHIFT[itr]);
@@ -133,15 +134,66 @@ public class Main {
         }
 
 
-//        System.out.println();
+        String cipheredText = encrypt(plainText, true);
+        String decipheredText = encrypt(cipheredText, false);
 
+        String unpadded = decipheredText.substring(0);
+        while (unpadded.endsWith("~")){
+            char[] arr = unpadded.toCharArray();
+            arr[unpadded.length()-1] = ' ';
+            unpadded = new String(arr);
+            unpadded = unpadded.trim();
+        }
+
+
+
+
+
+        //==================================================================================================
+        //Output to file
+        //==================================================================================================
+        try {
+            File output = new File("Output.txt");
+            output.createNewFile();
+
+            PrintWriter printWriter = new PrintWriter(new FileOutputStream(output));
+
+
+            printWriter.println("Original Text   : " + backupPlainText);
+            printWriter.println("Padded Text     : " + plainText);
+            printWriter.println();
+            printWriter.println("Ciphered text   : " + cipheredText);
+            printWriter.println();
+            printWriter.println("Deciphered text : " + decipheredText);
+            printWriter.println("Unpadded text   : " + unpadded);
+
+            printWriter.flush();
+            printWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+    }
+
+    static String encrypt(String text, boolean encrypt){
+        int numBlock = text.length()/8;        //number of blocks for plain text
+        //==================================================================================================
+        //Encryption
+        //==================================================================================================
         String cipheredText = "";
-        //==================================================================================================
-        //For each block
-        //==================================================================================================
         for (int blockIdx = 0; blockIdx < numBlock; blockIdx++) {               ///this loop is for each block
             System.out.println();
-            String charBlock = plainText.substring(blockIdx*8, blockIdx*8+8);   //divided into 8 chars
+            if(encrypt){
+                System.out.println("ENCRYPTING...");
+            }
+            else {
+                System.out.println("DECRYPTING...");
+            }
+            String charBlock = text.substring(blockIdx*8, blockIdx*8+8);   //divided into 8 chars
 
             String binaryBlock = stringToBinaryString(charBlock);       //divided into 64 bits
 
@@ -155,14 +207,30 @@ public class Main {
             //Starting iterations
             //==================================================================================================
             for (int itr = 0; itr < 16; itr++) {          //iterations
-                char []ki = itrKeys.get(itr).toCharArray(); //key for this iteration
+                char []ki;
+                if(encrypt){
+                    ki = itrKeys.get(itr).toCharArray(); //key for this iteration
+                }
+                else {
+                    ki = itrKeys.get(NUM_ITR-1-itr).toCharArray(); //key for this iteration
+                }
+
+
+                char []itrBlock = new char[64];
+
+                for (int i = 0; i < 32; i++) {
+                    itrBlock[i] = transposedBlock[i+32];    //L(itr) = R(itr-1)
+                }
 
                 //==================================================================================================
                 //Starting function for each round
                 //==================================================================================================
 
                 //expanding L(i-1) to 48 bits
-                char[] expanded = transpose(transposedBlock, E);
+                char[] expanded = transpose(itrBlock, E);
+
+//                System.out.println("Before : " + new String(transposedBlock));
+//                System.out.println("After  : " + new String(revTranspose(expanded, E, 32)) );
 
                 //XORing expanded and ki
                 char[] ekXOR = XOR(expanded, ki);
@@ -170,6 +238,8 @@ public class Main {
 
                 ///sampling 32 bits
                 char[]  sampled = transpose(ekXOR, PI_2);
+//                System.out.println("Before : " + new String(ekXOR));
+//                System.out.println("After  : " + new String(revTranspose(sampled, PI_2, 48)) );
 
                 ///get transposed samples as function output
                 char[] funcOut = transpose(sampled, P);
@@ -177,11 +247,7 @@ public class Main {
                 //==================================================================================================
                 //Output for each round
                 //==================================================================================================
-                char []itrBlock = new char[64];
 
-                for (int i = 0; i < 32; i++) {
-                    itrBlock[i] = transposedBlock[i+32];    //L(itr) = R(itr-1)
-                }
 
                 char[] Li_1 = new char[32];
                 for (int i = 0; i < 32; i++) {
@@ -223,50 +289,18 @@ public class Main {
 
 
             System.out.println("CharBlock    : " + charBlock);
-            System.out.println("BinaryBlock  : " + binaryBlock);
-            System.out.println("TransBlock   : " + new String(backupTransposedBlock));
-            System.out.println("OutputBlock  : " + new String(finalTransposedBlock));
-            System.out.println("CipherBlock  : " + blockSentString);
-            System.out.println("SentNumber   : " + blockSentNumber);
+//            System.out.println("BinaryBlock  : " + binaryBlock);
+//            System.out.println("TransBlock   : " + new String(backupTransposedBlock));
+//            System.out.println("OutputBlock  : " + new String(finalTransposedBlock));
+//            System.out.println("SentNumber   : " + blockSentNumber);
+            System.out.println("ChangedBlock : " + blockSentString);
 
         }
 
-        //==================================================================================================
-        //Output of Encryption
-        //==================================================================================================
-        System.out.println();
-        System.out.println();
-        System.out.println("Ciphered text : " + cipheredText);
-
-
-        try {
-            File output = new File("Output.txt");
-            output.createNewFile();
-
-            PrintWriter printWriter = new PrintWriter(new FileOutputStream(output));
-
-            printWriter.println("Original Text : " + plainText);
-            printWriter.println("Ciphered text : " + cipheredText);
-
-            printWriter.flush();
-            printWriter.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        //==================================================================================================
-        //Decryption
-        //==================================================================================================
-
-
-
-
-
+        return cipheredText;
     }
 
-    static char[] transpose(char []source, int[] trans){
+    static char[] transpose(char[] source, int[] trans){
         int size = trans.length;
         char []result = new char[size];
 
