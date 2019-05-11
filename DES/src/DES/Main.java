@@ -65,9 +65,9 @@ public class Main {
 
     public static void main(String []args){
 
-//==================================================================================================
-//Input
-//==================================================================================================
+        //==================================================================================================
+        //Input
+        //==================================================================================================
         System.out.println("Give 8 char key and plain text: ");
 
         Scanner scanner = new Scanner(System.in);
@@ -99,18 +99,15 @@ public class Main {
         int numBlock = plainText.length()/8;        //number of blocks for plain text
         System.out.println();
 
-//==================================================================================================
-//generating key for each round
-//==================================================================================================
+        //==================================================================================================
+        //generating key for each round
+        //==================================================================================================
         String keyBinary = stringToBinaryString(key);
-        char []transposedKey = new char[56];
-        for (int i = 0; i < 56; i++) {                              //transposing key
-            transposedKey[i] = keyBinary.charAt(CP_1[i]-1);
-        }
+        char []transposedKey = transpose(keyBinary.toCharArray(), CP_1);
 
-        System.out.println("InitialKey : " + keyBinary);
-        System.out.println("TrnspsdKey : " + new String(transposedKey));
-//        System.out.println("Trnsps2Key : " + new String(leftRotate(transposedKey, 2)));
+        System.out.println("InitialKey    : " + keyBinary);
+        System.out.println("TransposedKey : " + new String(transposedKey));
+//        System.out.println("TransposedKey2: " + new String(leftRotate(transposedKey, 2)));
 
         ArrayList<String> itrKeys = new ArrayList<String>();
         //generating key for each iteration
@@ -122,68 +119,151 @@ public class Main {
 
             transposedKey = fullString.toCharArray(); //?????????????????????????
 
-            String ki = "";
-            for (int i = 0; i < 48; i++) {
-                ki = ki + fullString.charAt(CP_2[i]-1);
-            }
+            char []kiArr = transpose(fullString.toCharArray(), CP_2);
 
+            String ki = new String(kiArr);
             itrKeys.add(ki);
 
-            System.out.println("Key " + itr + " : " + ki);
+            //System.out.println("Key " + itr + " : " + ki);
 
         }
 
 
-
 //        System.out.println();
 
-
+        String cipheredText = new String();
+        //==================================================================================================
+        //For each block
+        //==================================================================================================
         for (int blockIdx = 0; blockIdx < numBlock; blockIdx++) {               ///this loop is for each block
             System.out.println();
             String charBlock = plainText.substring(blockIdx*8, blockIdx*8+8);   //divided into 8 chars
 
             String binaryBlock = stringToBinaryString(charBlock);       //divided into 64 bits
 
-            char []transposedBlock = new char[64];
-            for (int i = 0; i < 64; i++) {                              //transposing
-                //System.out.println(PI[i]);
-                transposedBlock[i] = binaryBlock.charAt(PI[i]-1);
+            char []transposedBlock = transpose(binaryBlock.toCharArray(), PI);
+            char []backupTransposedBlock = new char[64];
+            for (int i = 0; i < 64; i++) {
+                backupTransposedBlock[i] = transposedBlock[i];
             }
 
-
-
-
+            //==================================================================================================
+            //Starting iterations
+            //==================================================================================================
             for (int itr = 0; itr < 16; itr++) {          //iterations
-                char []itrBlock = new char[64];
-
-                for (int j = 0; j < 32; j++) {
-                    itrBlock[j] = transposedBlock[j+32];    //L(itr) = R(itr-1)
-                }
-
                 char []ki = itrKeys.get(itr).toCharArray(); //key for this iteration
 
+                //==================================================================================================
+                //Starting function for each round
+                //==================================================================================================
 
+                //expanding L(i-1) to 48 bits
+                char[] expanded = transpose(transposedBlock, E);
+
+                //XORing expanded and ki
+                char[] ekXOR = XOR(expanded, ki);
+
+
+                ///sampling 32 bits
+                char[]  sampled = transpose(ekXOR, PI_2);
+
+                ///get transposed samples as function output
+                char[] funcOut = transpose(sampled, P);
+
+                //==================================================================================================
+                //Output for each round
+                //==================================================================================================
+                char []itrBlock = new char[64];
+
+                for (int i = 0; i < 32; i++) {
+                    itrBlock[i] = transposedBlock[i+32];    //L(itr) = R(itr-1)
+                }
+
+                char[] Li_1 = new char[32];
+                for (int i = 0; i < 32; i++) {
+                    Li_1[i] = transposedBlock[i];
+                }
+
+                char[] Ri = XOR(Li_1, funcOut);
+
+                for (int i = 0; i < 32; i++) {
+                    itrBlock[i+32] = Ri[i];
+                }
+
+                transposedBlock = itrBlock;     //to next iteration
+
+                //System.out.println("Transposed Block after iteration " + itr + " : " + new String(transposedBlock));
 
             }
 
+            long blockSentNumber = binaryStringToLong(new String(transposedBlock));
+            String blockSentString = binaryStringToString(new String(transposedBlock));
+
+            cipheredText = cipheredText.concat(blockSentString);
 
 
-
-
-
-            System.out.println("CharBlock   : " + charBlock);
-            System.out.println("BinaryBlock : " + binaryBlock);
-            System.out.println("TransBlock  : " + new String(transposedBlock));
-//            System.out.println("FoundBlock  : " + binaryStringToString(binaryBlock));
+            System.out.println("CharBlock    : " + charBlock);
+            System.out.println("BinaryBlock  : " + binaryBlock);
+            System.out.println("TransBlock   : " + new String(backupTransposedBlock));
+            System.out.println("OutputBlock  : " + new String(transposedBlock));
+            System.out.println("CipherBlock  : " + blockSentString);
+            System.out.println("SentNumber   : " + blockSentNumber);
 
         }
 
 
-//        System.out.println(charToBinaryString('c'));
-//        System.out.println(binaryStringToLong(Long.toBinaryString(12345678)));
+        System.out.println();
+        System.out.println();
+        System.out.println("Ciphered text : " + cipheredText);
 
 
+    }
 
+    static char[] transpose(char []source, int[] trans){
+        int size = trans.length;
+        char []result = new char[size];
+
+        for (int i = 0; i < size; i++) {  //transposing
+            result[i] = source[trans[i]-1];
+        }
+
+        return result;
+    }
+
+
+    static char[] leftRotate(char[] array, int num ){
+        for (int i = 0; i < num; i++) {
+            char temp = array[0];
+            for (int j = 0; j < array.length-1; j++) {
+                array[j] = array[j+1];
+            }
+            array[array.length-1] = temp;
+        }
+
+        return array;
+    }
+
+    static char[] XOR(char[] array1, char[] array2){
+        int size = array1.length;
+        
+        if(array2.length!=size){
+            System.out.println("SIZE NOT CORRECT!!!!");
+            return null;
+        }
+
+        char[] array = new char[size];
+
+        for (int i = 0; i < size; i++) {
+            if(array1[i] == array2[i]){
+                array[i] = '0';
+            }
+            else {
+                array[i] = '1';
+            }
+        }
+
+
+        return array;
     }
 
     static String charToBinaryString(char ch){
@@ -246,7 +326,7 @@ public class Main {
 
         //System.out.println(string.length()); ///wrong
 
-        for (int i = 0; i < string.length(); i+=8) {
+        for (int i = 0; i+7 < string.length(); i+=8) {
             fullString = fullString + binaryStringToChar(string.substring(i, i+8));
         }
 
@@ -270,17 +350,6 @@ public class Main {
 
     }
 
-    static char[] leftRotate(char[] array, int num ){
-        for (int i = 0; i < num; i++) {
-            char temp = array[0];
-            for (int j = 0; j < array.length-1; j++) {
-                array[j] = array[j+1];
-            }
-            array[array.length-1] = temp;
-        }
-
-        return array;
-    }
 
 
 
