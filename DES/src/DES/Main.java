@@ -131,7 +131,7 @@ public class Main {
 
 //        System.out.println();
 
-        String cipheredText = new String();
+        String cipheredText = "";
         //==================================================================================================
         //For each block
         //==================================================================================================
@@ -196,8 +196,24 @@ public class Main {
 
             }
 
-            long blockSentNumber = binaryStringToLong(new String(transposedBlock));
-            String blockSentString = binaryStringToString(new String(transposedBlock));
+            //==================================================================================================
+            //Iterations Complete
+            //==================================================================================================
+
+            //swapping left and right half
+            char []swapBlock = new char[64];
+
+            for (int i = 0; i < 32; i++) {
+                swapBlock[i] = transposedBlock[i+32];
+                swapBlock[i+32] = transposedBlock[i];
+            }
+
+            //final transpose
+            char [] finalTransposedBlock = transpose(swapBlock, PI_1);
+
+
+            long blockSentNumber = binaryStringToLong(new String(finalTransposedBlock));
+            String blockSentString = binaryStringToString(new String(finalTransposedBlock));
 
             cipheredText = cipheredText.concat(blockSentString);
 
@@ -205,16 +221,26 @@ public class Main {
             System.out.println("CharBlock    : " + charBlock);
             System.out.println("BinaryBlock  : " + binaryBlock);
             System.out.println("TransBlock   : " + new String(backupTransposedBlock));
-            System.out.println("OutputBlock  : " + new String(transposedBlock));
+            System.out.println("OutputBlock  : " + new String(finalTransposedBlock));
             System.out.println("CipherBlock  : " + blockSentString);
             System.out.println("SentNumber   : " + blockSentNumber);
 
         }
 
-
+        //==================================================================================================
+        //Output of Encryption
+        //==================================================================================================
         System.out.println();
         System.out.println();
         System.out.println("Ciphered text : " + cipheredText);
+
+
+        //==================================================================================================
+        //Decryption
+        //==================================================================================================
+
+
+
 
 
     }

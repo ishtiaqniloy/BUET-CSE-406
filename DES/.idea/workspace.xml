@@ -20,8 +20,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/DES/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="122" column="54" selection-start-line="122" selection-start-column="54" selection-end-line="122" selection-end-column="54" />
+            <state relative-caret-position="444">
+              <caret line="223" column="82" selection-start-line="223" selection-start-column="82" selection-end-line="223" selection-end-column="82" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#3833#3841#0" expanded="true" />
@@ -136,7 +136,7 @@
       <option name="presentableId" value="Default" />
       <updated>1557500807136</updated>
       <workItem from="1557500808794" duration="3530000" />
-      <workItem from="1557507721711" duration="10500000" />
+      <workItem from="1557507721711" duration="15657000" />
     </task>
     <task id="LOCAL-00001" summary="blocks built">
       <created>1557551709578</created>
@@ -159,11 +159,25 @@
       <option name="project" value="LOCAL" />
       <updated>1557552665571</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="keys built">
+      <created>1557584191078</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1557584191078</updated>
+    </task>
+    <task id="LOCAL-00005" summary="encryption done. testing required">
+      <created>1557588783732</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1557588783732</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="14030000" />
+    <option name="totallyTimeSpent" value="19187000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -177,8 +191,8 @@
       <window_info id="Capture Tool" order="5" />
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.45826513" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3289689" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.5564648" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -217,13 +231,15 @@
     <MESSAGE value="blocks built" />
     <MESSAGE value="binary blocks built" />
     <MESSAGE value="binary block to string written" />
-    <option name="LAST_COMMIT_MESSAGE" value="binary block to string written" />
+    <MESSAGE value="keys built" />
+    <MESSAGE value="encryption done. testing required" />
+    <option name="LAST_COMMIT_MESSAGE" value="encryption done. testing required" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/DES/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="122" column="54" selection-start-line="122" selection-start-column="54" selection-end-line="122" selection-end-column="54" />
+        <state relative-caret-position="444">
+          <caret line="223" column="82" selection-start-line="223" selection-start-column="82" selection-end-line="223" selection-end-column="82" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#3833#3841#0" expanded="true" />
