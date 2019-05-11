@@ -88,6 +88,7 @@ public class Main {
         for (int blockIdx = 0; blockIdx < numBlock; blockIdx++) {               ///this loop is for each block
             String charBlock = plainText.substring(blockIdx*8, blockIdx*8+8);
 
+            String binaryBlock = stringToBinaryString(charBlock);
 
 
 
@@ -95,10 +96,12 @@ public class Main {
 
 
             System.out.println(charBlock);
+            System.out.println(binaryBlock);
         }
 
-        System.out.println(charToBinaryString('c'));
-        System.out.println(binaryStringToLong(Long.toBinaryString(12345678)));
+
+//        System.out.println(charToBinaryString('c'));
+//        System.out.println(binaryStringToLong(Long.toBinaryString(12345678)));
 
 
 
@@ -121,6 +124,17 @@ public class Main {
         binaryString[8] = 0;
 
         return new String(binaryString);
+
+    }
+
+    static String stringToBinaryString(String str){
+        String binaryString = "";
+
+        for (int i = 0; i < str.length(); i++) {
+            binaryString = binaryString.concat(charToBinaryString(str.charAt(i)));
+        }
+
+        return binaryString;
 
     }
 
