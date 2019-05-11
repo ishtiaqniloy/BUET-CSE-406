@@ -1,9 +1,12 @@
 package DES;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-
+//==================================================================================================
+//Matrices
+//==================================================================================================
     static int[] PI = { 58, 50, 42, 34, 26, 18, 10, 2,
                         60, 52, 44, 36, 28, 20, 12, 4,
                         62, 54, 46, 38, 30, 22, 14, 6,
@@ -61,11 +64,21 @@ public class Main {
 
 
     public static void main(String []args){
-        System.out.println("Give key and plain text: ");
+
+//==================================================================================================
+//Input
+//==================================================================================================
+        System.out.println("Give 8 char key and plain text: ");
 
         Scanner scanner = new Scanner(System.in);
 
         String key = scanner.nextLine();
+
+        if(key.length()!=8){
+            System.out.println("WRONG KEY LENGTH!!!!!");
+            return;
+        }
+
         String plainText = scanner.nextLine();
 
 //        String bin = charToBinaryString(' ');
@@ -83,21 +96,86 @@ public class Main {
 
         System.out.println("Concatenated plain text : " + plainText);
 
-        int numBlock = plainText.length()/8;
+        int numBlock = plainText.length()/8;        //number of blocks for plain text
+        System.out.println();
+
+//==================================================================================================
+//generating key for each round
+//==================================================================================================
+        String keyBinary = stringToBinaryString(key);
+        char []transposedKey = new char[56];
+        for (int i = 0; i < 56; i++) {                              //transposing key
+            transposedKey[i] = keyBinary.charAt(CP_1[i]-1);
+        }
+
+        System.out.println("InitialKey : " + keyBinary);
+        System.out.println("TrnspsdKey : " + new String(transposedKey));
+//        System.out.println("Trnsps2Key : " + new String(leftRotate(transposedKey, 2)));
+
+        ArrayList<String> itrKeys = new ArrayList<String>();
+        //generating key for each iteration
+        for (int itr = 0; itr < 16; itr++) {
+            char[] lk = leftRotate(new String(transposedKey).substring(0, 28).toCharArray(), SHIFT[itr]);
+            char[] rk = leftRotate(new String(transposedKey).substring(28).toCharArray(), SHIFT[itr]);
+
+            String fullString = new String(lk) + new String(rk);
+
+            transposedKey = fullString.toCharArray(); //?????????????????????????
+
+            String ki = "";
+            for (int i = 0; i < 48; i++) {
+                ki = ki + fullString.charAt(CP_2[i]-1);
+            }
+
+            itrKeys.add(ki);
+
+            System.out.println("Key " + itr + " : " + ki);
+
+        }
+
+
+
+//        System.out.println();
+
 
         for (int blockIdx = 0; blockIdx < numBlock; blockIdx++) {               ///this loop is for each block
-            String charBlock = plainText.substring(blockIdx*8, blockIdx*8+8);
+            System.out.println();
+            String charBlock = plainText.substring(blockIdx*8, blockIdx*8+8);   //divided into 8 chars
 
-            String binaryBlock = stringToBinaryString(charBlock);
+            String binaryBlock = stringToBinaryString(charBlock);       //divided into 64 bits
+
+            char []transposedBlock = new char[64];
+            for (int i = 0; i < 64; i++) {                              //transposing
+                //System.out.println(PI[i]);
+                transposedBlock[i] = binaryBlock.charAt(PI[i]-1);
+            }
+
+
+
+
+            for (int itr = 0; itr < 16; itr++) {          //iterations
+                char []itrBlock = new char[64];
+
+                for (int j = 0; j < 32; j++) {
+                    itrBlock[j] = transposedBlock[j+32];    //L(itr) = R(itr-1)
+                }
+
+                char []ki = itrKeys.get(itr).toCharArray(); //key for this iteration
+
+
+
+            }
 
 
 
 
 
 
-            System.out.println(charBlock);
-            System.out.println(binaryBlock);
-            System.out.println(binaryStringToString(binaryBlock));
+            System.out.println("CharBlock   : " + charBlock);
+            System.out.println("BinaryBlock : " + binaryBlock);
+            System.out.println("TransBlock  : " + new String(transposedBlock));
+//            System.out.println("FoundBlock  : " + binaryStringToString(binaryBlock));
+
         }
 
 
@@ -191,6 +269,20 @@ public class Main {
         return val;
 
     }
+
+    static char[] leftRotate(char[] array, int num ){
+        for (int i = 0; i < num; i++) {
+            char temp = array[0];
+            for (int j = 0; j < array.length-1; j++) {
+                array[j] = array[j+1];
+            }
+            array[array.length-1] = temp;
+        }
+
+        return array;
+    }
+
+
 
 
 }
