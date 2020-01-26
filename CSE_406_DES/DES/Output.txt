@@ -1,0 +1,7 @@
+Original Text   : Hello world
+Padded Text     : Hello world~~~~~
+
+Ciphered text   : ¤t88ø^Áèjî
+
+Deciphered text : Hello world~~~~~
+Unpadded text   : Hello world
